@@ -101,7 +101,7 @@ app.get('/', async (req, res) => {
       data: data,
     });
   } catch (error) {
-    console.error('Error in route handler:', error);
+    console.log('Error in route handler:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
