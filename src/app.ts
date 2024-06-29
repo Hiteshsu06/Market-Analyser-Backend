@@ -14,7 +14,15 @@ require('dotenv').config();
 const app = express();
 
 app.use(morgan('dev'));
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      'script-src': ["'self'", "'unsafe-eval'"],
+      'object-src': ["'self'"]
+    }
+  }
+}));
 app.use(cors());
 app.use(express.json());
 
