@@ -36,8 +36,7 @@ const fetchDataByIndexName = async (item: IndexDetail) => {
     headless: true, // or false depending on your preference
     args: [
       '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage'
+      '--incognito',
     ]
   };
 
@@ -101,7 +100,7 @@ app.get('/', async (req, res) => {
       data: data,
     });
   } catch (error) {
-    console.log('Error in route handler:', error);
+    console.error('Error in route handler:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
