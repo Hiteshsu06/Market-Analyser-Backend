@@ -5,7 +5,8 @@ import cors from 'cors';
 // import puppeteer from 'puppeteer';
 import * as middlewares from './middlewares';
 import api from './api';
-import chromium from 'chrome-aws-lambda';
+import chrome from 'chrome-aws-lambda';
+import puppeteer from 'puppeteer-core';
 
 
 require('dotenv').config();
@@ -23,13 +24,22 @@ interface IndexDetail {
 }
 
 const fetchDataByIndexName = async (item: IndexDetail) => {
-  const browser = await chromium.puppeteer.launch({
-    args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath,
-    headless: true,
-    ignoreHTTPSErrors: true,
-  })
+  const options = process.env.AWS_REGION
+    ? {
+        args: chrome.args,
+        executablePath: await chrome.executablePath,
+        headless: chrome.headless
+      }
+    : {
+        args: [],
+        executablePath:
+          process.platform === 'win32'
+            ? 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+            : process.platform === 'linux'
+            ? '/usr/bin/google-chrome'
+            : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      };
+  const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
 
   try {
