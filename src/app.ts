@@ -2,11 +2,11 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import puppeteer from 'puppeteer-core';
-import chrome from 'chrome-aws-lambda';
-
+// import puppeteer from 'puppeteer';
 import * as middlewares from './middlewares';
 import api from './api';
+import chromium from 'chrome-aws-lambda';
+
 
 require('dotenv').config();
 
@@ -23,13 +23,13 @@ interface IndexDetail {
 }
 
 const fetchDataByIndexName = async (item: IndexDetail) => {
-  let browser = await puppeteer.launch({
-    args: [...chrome.args, '--hide-scrollbars', '--disable-web-security'],
-    defaultViewport: chrome.defaultViewport,
-    executablePath: await chrome.executablePath,
+  const browser = await chromium.puppeteer.launch({
+    args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
     headless: true,
     ignoreHTTPSErrors: true,
-  });
+  })
   const page = await browser.newPage();
 
   try {
